@@ -11,7 +11,7 @@ if [ ! -e /proc/acpi/ibm/fan ]; then
 fi
 
 termscript() {
-    # echo "temrscript" >&2
+    test -n $DEBUG && echo "temrscript" >&2
     echo "level auto" > /proc/acpi/ibm/fan
     exit 0
 }
@@ -22,19 +22,21 @@ while :; do
     T1=$(cat /sys/devices/platform/coretemp.0/hwmon/hwmon2/temp1_input)
     CURR_LEVEL=$(cat /proc/acpi/ibm/fan | grep level: | sed -e 's/^.*:\s*//')
 
-    NEW_LEVEL="4"
-
-    if [ $T1 -gt 39000 ]; then
+    if [ $T1 -lt 39000 ]; then
+        NEW_LEVEL="4"
+    elif [ $T1 -lt 49000 ]; then
         NEW_LEVEL="5"
-    elif [ $T1 -gt 49000 ]; then
+    elif [ $T1 -lt 59000 ]; then
         NEW_LEVEL="6"
-    elif [ $T1 -gt 59000 ]; then
+    else
         NEW_LEVEL="7"
     fi
 
-    # echo "T1 $T1 CURR_LEVEL $CURR_LEVEL NEW_LEVEL $NEW_LEVEL" >&2
+    test -n $DEBUG && echo "T1 $T1 CURR_LEVEL $CURR_LEVEL NEW_LEVEL $NEW_LEVEL" >&2
 
     if [ "$NEW_LEVEL" != "$CURR_LEVEL" ]; then
+        test -n $DEBUG && echo "level $NEW_LEVEL" >&2
+
         echo "level $NEW_LEVEL" > /proc/acpi/ibm/fan
     fi
 

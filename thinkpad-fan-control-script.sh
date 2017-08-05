@@ -22,7 +22,7 @@ while :; do
     T1=$(cat /sys/devices/platform/coretemp.0/hwmon/hwmon2/temp1_input)
     CURR_LEVEL=$(cat /proc/acpi/ibm/fan | grep level: | sed -e 's/^.*:\s*//')
 
-    NEW_LEVEL="auto"
+    NEW_LEVEL="4"
 
     if [ $T1 -gt 39000 ]; then
         NEW_LEVEL="5"

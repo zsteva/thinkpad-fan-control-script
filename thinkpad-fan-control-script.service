@@ -1,0 +1,11 @@
+[Unit]
+Description=thinkpad fan control script
+
+[Service]
+Type=simple
+ExecStart=/usr/lib/thinkpad-fan-control-script/thinkpad-fan-control-script.sh
+#PIDFile=/var/run/thinkfan-fan-control-script.pid
+
+[Install]
+WantedBy=multi-user.target
+
